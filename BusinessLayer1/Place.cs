@@ -59,16 +59,7 @@ namespace BusinessLayer1
             objdb.addStation(objStationList,cityId);
 
         }
-
-
-        //fetching station details from Pvt Api
-        //public List<StationModel> FetchPollutants(string city)
-        //{
-        //    List<StationModel> objStationList = new List<StationModel>();
-        //    ApiHelper objAp = new ApiHelper();
-        //    objStationList = objAp.fetchPollutants();
-        //    return objStationList;
-        //}
+        
 
     }
 }

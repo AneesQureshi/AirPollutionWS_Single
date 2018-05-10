@@ -28,6 +28,7 @@ namespace DbLayer1
 
                 foreach (var records in objRecordsModel)
                 {
+                    
 
                     conn = dbc.openConnection();
                     cmd = new MySqlCommand("sp_addPlace", conn);
@@ -36,9 +37,10 @@ namespace DbLayer1
                     cmd.Parameters.AddWithValue("val_state",records.state );
                     cmd.Parameters.AddWithValue("val_city", records.city);
                    
+                    //if exist place check, fetching id 
                     int recordInserted = cmd.ExecuteNonQuery();
 
-                   
+                   //fetch station id and send that station id with pollutant value and name to proc that added pollutants
 
                 }
 
@@ -81,7 +83,10 @@ namespace DbLayer1
                     RecordsModel objCity = new RecordsModel();
                     objCity.id = sdr["id"].ToString();
                     objCity.city = sdr["city"].ToString();
-                    objCityList.Add(objCity);
+
+                        objCityList.Add(objCity);
+                    
+                    
                 }
 
 
@@ -122,19 +127,16 @@ namespace DbLayer1
                     cmd = new MySqlCommand("sp_addStation", conn);
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("val_stationName", records.station.name);
-                    cmd.Parameters.AddWithValue("val_aqi", records.aqi);
+                  //  cmd.Parameters.AddWithValue("val_aqi", records.aqi);
                     cmd.Parameters.AddWithValue("val_lat",latitude);
                     cmd.Parameters.AddWithValue("val_long",longitude);
                     cmd.Parameters.AddWithValue("val_cityid", cityId);
 
 
                     int recordInserted = cmd.ExecuteNonQuery();
-
-
-
+                    
                 }
 
-               
 
             }
 
@@ -149,6 +151,44 @@ namespace DbLayer1
            
         }
 
+        //add pollutant records from pvt api on the basis of lat long 
+        public void AddPollutants(PollutantListModel oneStation)
+        {
+
+            try
+            {
+
+
+                double latitude = oneStation.StationLatitude;
+                double longitude = oneStation.StationLongitude;
+
+
+                foreach (var pollutant in oneStation.pollutantModelList)
+                {
+                    conn = dbc.openConnection();
+                    cmd = new MySqlCommand("sp_addPollutants", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("val_PollutantName", pollutant.PollutantName);
+                    cmd.Parameters.AddWithValue("val_PollutantValue", pollutant.PollutantValue);
+                    cmd.Parameters.AddWithValue("val_lat", latitude);
+                    cmd.Parameters.AddWithValue("val_long", longitude);
+                    int recordInserted = cmd.ExecuteNonQuery();
+
+                }
+
+
+            }
+
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+            }
+            finally
+            {
+                dbc.closeConnection();
+            }
+
+        }
 
     }
 }

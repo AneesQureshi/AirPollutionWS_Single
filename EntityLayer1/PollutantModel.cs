@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace EntityLayer1
 {
-    public class StationModel
+    public class PollutantModel
     {
-
-       // public string aqi { get; set; }
-        public StationDetailModel station { get; set; }
-
+       
+        public string PollutantName { get; set; }
+        public string PollutantValue { get; set; }
     }
 }

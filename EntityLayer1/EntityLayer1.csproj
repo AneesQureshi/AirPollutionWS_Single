@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PollutantListModel.cs" />
+    <Compile Include="PollutantModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RecordsModel.cs" />
     <Compile Include="StationDetailModel.cs" />

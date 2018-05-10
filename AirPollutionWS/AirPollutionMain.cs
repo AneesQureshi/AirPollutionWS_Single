@@ -26,12 +26,13 @@ namespace AirPollutionWS
                 //fetching country, state, city name from govt api
                 objRecordsModel =objPlace.FetchPlace();
 
-                                //adding country, state, city name from govt api to database 
-                                objPlace.AddPlace(objRecordsModel);
+               
 
-                //fetching city details from database(above list may keep changing so we are taking city
-                //details from database)
-                objCityList= objPlace.FetchCity();
+                //adding country, state, city name from govt api to database 
+                 objPlace.AddPlace(objRecordsModel);
+
+                //fetching city details from database(above list may keep changing so we are taking city details from database)
+                objCityList = objPlace.FetchCity();
 
                 //fetching station records from pvt api based on the city 
                 foreach (var cityRecord in objCityList)
@@ -40,23 +41,20 @@ namespace AirPollutionWS
                     List<StationModel> objStationList = new List<StationModel>();
                     string cityId = cityRecord.id;
                     string city = cityRecord.city;
-
-                    //on the basis of city we call below function and get the station list with aqi,name & lat long from pvt api
-                    objStationList=objPlace1.FetchStation(city);
+                    
+                        //on the basis of city we call below function and get the station list with aqi,name & lat long from pvt api
+                        objStationList = objPlace1.FetchStation(city);
 
                     //add station name,aqi, lat long into the database
-                    objPlace1.addStation(objStationList,cityId);
+                    objPlace1.addStation(objStationList, cityId);
 
-                    //fetch pollutant records from pvt api on the basis of lat long 
-
-
-                    //add pollutants details in database with corresponding station id
-
-
-
-                    
-
-                    
+                    if (objStationList != null)
+                    {
+                        //fetch and add pollutants of stations of every city.
+                        Pollutant objPollutant = new Pollutant();
+                        objPollutant.FetchAddPollutants(objStationList);
+                    }
+                   
                 }
                 
 
