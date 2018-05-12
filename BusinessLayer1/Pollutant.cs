@@ -42,20 +42,6 @@ namespace BusinessLayer1
                 objPollutantList.pollutantModelList = objStaionPollutant;
                 objAllStationPollutantList.Add(objPollutantList);
 
-                //Task.Run(
-                //                       () =>
-                //                       {
-                                           
-
-                //                           objPollutantList.StationLatitude = latitude;
-                //                           objPollutantList.StationLongitude = longitude;
-                //                           objPollutantList.pollutantModelList = objStaionPollutant;
-                //                           objAllStationPollutantList.Add(objPollutantList);
-                //                       }
-                //                   );
-
-                //                                Thread.Sleep(TimeSpan.FromSeconds(3));
-
 
 
             }

@@ -27,39 +27,47 @@ namespace DbLayer1
             // List<FieldsModel> objFieldModel = new List<FieldsModel>();
             List<RecordsModel> objRecordsModel = new List<RecordsModel>();
 
-
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(URL);
-
-            // Add an Accept header for JSON format.
-            client.DefaultRequestHeaders.Accept.Add(
-            new MediaTypeWithQualityHeaderValue("application/json"));
-
-            // List data response.
-            HttpResponseMessage response = client.GetAsync(urlParameters).Result;  // Blocking call!
-
-            if (response != null || response.IsSuccessStatusCode)
+            try
             {
 
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(URL);
 
-                var result = response.Content.ReadAsStringAsync().Result;
-                JObject obj = JObject.Parse(result);
-                //  JArray addJsonList = (JArray)obj["fields"];
-                JArray totalCount = (JArray)obj["records"];
+                // Add an Accept header for JSON format.
+                client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));
 
-                //   objFieldModel = (List<FieldsModel>)addJsonList.ToObject(typeof(List<FieldsModel>));
-                objRecordsModel = (List<RecordsModel>)totalCount.ToObject(typeof(List<RecordsModel>));
+                // List data response.
+                HttpResponseMessage response = client.GetAsync(urlParameters).Result;  // Blocking call!
+
+                if (response != null || response.IsSuccessStatusCode)
+                {
 
 
-                //distinct value if required
-                //var country= objRecordsModel.Select(o => o.country).Distinct();
-                //var state=objRecordsModel.Select(o => o.state).Distinct();
-                //var city=objRecordsModel.Select(o => o.city).Distinct();
+                    var result = response.Content.ReadAsStringAsync().Result;
+                    JObject obj = JObject.Parse(result);
+                    //  JArray addJsonList = (JArray)obj["fields"];
+                    JArray totalCount = (JArray)obj["records"];
 
-                return objRecordsModel;
+                    //   objFieldModel = (List<FieldsModel>)addJsonList.ToObject(typeof(List<FieldsModel>));
+                    objRecordsModel = (List<RecordsModel>)totalCount.ToObject(typeof(List<RecordsModel>));
+
+
+                    //distinct value if required
+                    //var country= objRecordsModel.Select(o => o.country).Distinct();
+                    //var state=objRecordsModel.Select(o => o.state).Distinct();
+                    //var city=objRecordsModel.Select(o => o.city).Distinct();
+
+                    return objRecordsModel;
+
+                }
 
             }
 
+            catch (Exception ex)
+            {
+                string message = ex.ToString();
+            }
             return objRecordsModel;
 
 
@@ -76,47 +84,54 @@ namespace DbLayer1
 
 
             List<StationModel> objStationList = new List<StationModel>();
-
-
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(URL1);
-
-            // Add an Accept header for JSON format.
-            client.DefaultRequestHeaders.Accept.Add(
-            new MediaTypeWithQualityHeaderValue("application/json"));
-
-            // List data response.
-            HttpResponseMessage response = client.GetAsync(urlParameters1).Result;  // Blocking call!
-
-            if (response != null || response.IsSuccessStatusCode)
+            try
             {
 
 
-                var result = response.Content.ReadAsStringAsync().Result;
-                JObject obj = JObject.Parse(result);
-                //  JArray addJsonList = (JArray)obj["fields"];
-                JArray totalCount = (JArray)obj["data"];
 
-                //   objFieldModel = (List<FieldsModel>)addJsonList.ToObject(typeof(List<FieldsModel>));
-                objStationList = (List<StationModel>)totalCount.ToObject(typeof(List<StationModel>));
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(URL1);
+
+                // Add an Accept header for JSON format.
+                client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));
+
+                // List data response.
+                HttpResponseMessage response = client.GetAsync(urlParameters1).Result;  // Blocking call!
+
+                if (response != null || response.IsSuccessStatusCode)
+                {
 
 
-                //distinct value if required
-                //var country= objRecordsModel.Select(o => o.country).Distinct();
-                //var state=objRecordsModel.Select(o => o.state).Distinct();
-                //var city=objRecordsModel.Select(o => o.city).Distinct();
+                    var result = response.Content.ReadAsStringAsync().Result;
+                    JObject obj = JObject.Parse(result);
+                    //  JArray addJsonList = (JArray)obj["fields"];
+                    JArray totalCount = (JArray)obj["data"];
 
-                return objStationList;
+                    //   objFieldModel = (List<FieldsModel>)addJsonList.ToObject(typeof(List<FieldsModel>));
+                    objStationList = (List<StationModel>)totalCount.ToObject(typeof(List<StationModel>));
 
+
+                    //distinct value if required
+                    //var country= objRecordsModel.Select(o => o.country).Distinct();
+                    //var state=objRecordsModel.Select(o => o.state).Distinct();
+                    //var city=objRecordsModel.Select(o => o.city).Distinct();
+
+                    return objStationList;
+
+                }
             }
-
+            catch (Exception ex)
+            {
+                string message = ex.ToString();
+            }
             return objStationList;
 
 
 
         }
 
-
+        //for callback if no pollutant data has come
         int count = 0;
 
 
@@ -124,12 +139,13 @@ namespace DbLayer1
         public List<PollutantModel> fetchPollutants(double latitude, double longitude)
 
         {
+
             List<PollutantModel> objPollutantList = new List<PollutantModel>();
 
             try
             {
 
-                
+
                 string URL1 = "https://api.waqi.info/feed/geo:" + latitude + ";" + longitude + "/";
                 string urlParameters1 = "?token=9890a36bde6c6f1aa7d923ef95c8b26dca940d49";
 
@@ -155,55 +171,47 @@ namespace DbLayer1
                 // }
 
 
-
-
-
-
-
-
-
-
                 HttpResponseMessage response = client.GetAsync(urlParameters1).Result;
 
                 if (response != null || response.IsSuccessStatusCode)
                 {
-                   
+
                     var result = response.Content.ReadAsStringAsync().Result;
 
-                   
+
 
                     JObject obj = JObject.Parse(result);
 
+                    //below is the call back in if else if pollutant data comes then else call again for data to come
                     if (!obj["data"].HasValues)
                     {
-                        
-                       
+
+
                         if (count < 5)
                         {
                             count = count + 1;
-                            fetchPollutants(latitude, longitude);
-                           
+                            objPollutantList = fetchPollutants(latitude, longitude);
+
                         }
                         return objPollutantList;
                     }
                     else
                     {
 
+                        count = 0;
 
                         JObject objResult = (JObject)obj["data"];
-
-
-
                         JObject obj1 = (JObject)obj["data"]["iaqi"];
                         JArray obj2 = (JArray)obj["data"]["city"]["geo"];
                         JValue obj3 = (JValue)obj["data"]["aqi"];
-                       
                         string aqi = (string)obj3.ToObject(typeof(string));
+
+
                         // IList<string> keys = obj1.Properties().Select(p => p.Name).ToList();
 
                         double[] arr = (double[])obj2.ToObject(typeof(double[]));
 
-                        if (latitude == arr[0]||latitude==arr[1] && longitude == arr[1]||longitude==arr[0])
+                        if (latitude == arr[0] || latitude == arr[1] && longitude == arr[1] || longitude == arr[0])
                         {
                             Dictionary<string, JObject> dictObj = obj1.ToObject<Dictionary<string, JObject>>();
 
@@ -238,12 +246,12 @@ namespace DbLayer1
                             {
                                 pm1.PollutantValue = aqi;
                             }
-                            
+
                             objPollutantList.Add(pm1);
-                                
 
                         }
                     }
+
                 }
 
             }

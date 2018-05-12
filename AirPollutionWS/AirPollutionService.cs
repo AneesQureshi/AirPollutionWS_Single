@@ -19,11 +19,38 @@ namespace AirPollutionWS
 
         protected override void OnStart(string[] args)
         {
-            AirPollutionMain.MainActivity();
+            
+
+            try
+            {
+                AirPollutionMain AP = new AirPollutionMain();
+                AP.MainActivity();
+
+                ServiceSchedule serviceSchedule = new ServiceSchedule();
+                serviceSchedule.ScheduleService();
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+            }
+
+
         }
 
         protected override void OnStop()
         {
+
+            try
+            {
+                ServiceSchedule serviceSchedule = new ServiceSchedule();
+                serviceSchedule.Schedular.Dispose();
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+            }
+
+
         }
     }
 }

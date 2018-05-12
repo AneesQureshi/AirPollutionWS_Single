@@ -16,7 +16,8 @@ namespace AirPollutionWS
         {
 
 #if DEBUG
-            AirPollutionMain.MainActivity();
+
+            ActionForDebug();
 #else
             ServiceBase[] ServicesToRun;
             ServicesToRun = new ServiceBase[]
@@ -25,6 +26,22 @@ namespace AirPollutionWS
             };
             ServiceBase.Run(ServicesToRun);
 #endif
+        }
+
+
+        static void ActionForDebug()
+        {
+            try
+            {
+                AirPollutionMain AP = new AirPollutionMain();
+                AP.MainActivity();
+                ServiceSchedule serviceSchedule = new ServiceSchedule();
+                serviceSchedule.ScheduleService();
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+            }
         }
     }
 }
