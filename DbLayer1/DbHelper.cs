@@ -3,6 +3,7 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,12 +38,24 @@ namespace DbLayer1
                     cmd.Parameters.AddWithValue("val_state", records.state);
                     cmd.Parameters.AddWithValue("val_city", records.city);
 
+                    //adding govt station and pollutant data
+                    cmd.Parameters.AddWithValue("val_station", records.station);
+                    cmd.Parameters.AddWithValue("val_pollutantName", records.pollutant_id);
+                    cmd.Parameters.AddWithValue("val_pollutantValue", records.pollutant_avg);
+
+
+                    string replace = records.last_update.Replace("-", "/");
+                    DateTime dateValue;
+                    DateTime.TryParseExact(replace, "d/M/yyyy HH:mm:ss", CultureInfo.InvariantCulture,DateTimeStyles.None, out dateValue);
+
+                    cmd.Parameters.AddWithValue("val_lastUpdated", dateValue);
+
                     //if exist place check, fetching id 
                     int recordInserted = cmd.ExecuteNonQuery();
 
                     //fetch station id and send that station id with pollutant value and name to proc that added pollutants
 
-                }
+                    }
 
                 allRecordsInserted = true;
 
