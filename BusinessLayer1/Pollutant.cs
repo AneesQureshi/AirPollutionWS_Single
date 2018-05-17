@@ -28,22 +28,14 @@ namespace BusinessLayer1
 
             ApiHelper objAp = new ApiHelper();
 
-            foreach (var records in objStationList)
+            foreach (var oneStation in objStationList)
             {
                 List<PollutantModel> objStaionPollutant = new List<PollutantModel>();
-                PollutantListModel objPollutantList = new PollutantListModel();
-                double latitude = records.station.geo[0];
-                double longitude = records.station.geo[1];
-
-                objStaionPollutant = objAp.fetchPollutants(latitude, longitude);
-
-                objPollutantList.StationLatitude = latitude;
-                objPollutantList.StationLongitude = longitude;
-                objPollutantList.pollutantModelList = objStaionPollutant;
-                objAllStationPollutantList.Add(objPollutantList);
-
-
-
+                PollutantListModel oneStationList = new PollutantListModel();
+                oneStationList = objAp.fetchPollutants(oneStation);
+                
+                objAllStationPollutantList.Add(oneStationList);
+                
             }
 
             return objAllStationPollutantList;

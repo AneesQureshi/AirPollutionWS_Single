@@ -176,6 +176,12 @@ namespace DbLayer1
                 double longitude = oneStation.StationLongitude;
 
 
+                string replace = oneStation.last_update.Replace("-", "/");
+                DateTime AqiUpdateDate;
+                DateTime.TryParseExact(replace, "yyyy/M/d HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out AqiUpdateDate);
+
+
+
                 foreach (var pollutant in oneStation.pollutantModelList)
                 {
                     conn = dbc.openConnection();
@@ -185,6 +191,7 @@ namespace DbLayer1
                     cmd.Parameters.AddWithValue("val_PollutantValue", pollutant.PollutantValue);
                     cmd.Parameters.AddWithValue("val_lat", latitude);
                     cmd.Parameters.AddWithValue("val_long", longitude);
+                    cmd.Parameters.AddWithValue("val_AqiUpdateDate", AqiUpdateDate);
                     int recordInserted = cmd.ExecuteNonQuery();
 
                 }

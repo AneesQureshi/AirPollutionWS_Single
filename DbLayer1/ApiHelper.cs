@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using EntityLayer1;
 using System.Collections;
+using System.Globalization;
 
 namespace DbLayer1
 {
@@ -136,12 +137,18 @@ namespace DbLayer1
 
 
         //fetch pollutant records from pvt api on the basis of lat long 
-        public List<PollutantModel> fetchPollutants(double latitude, double longitude)
+        public PollutantListModel fetchPollutants(StationModel oneStation)
 
         {
-
+            PollutantListModel oneStationPollutant = new PollutantListModel();
             List<PollutantModel> objPollutantList = new List<PollutantModel>();
-
+            
+           
+           
+            double latitude = oneStation.station.geo[0];
+            double longitude = oneStation.station.geo[1];
+            oneStationPollutant.StationLatitude = latitude;
+            oneStationPollutant.StationLongitude = longitude;
             try
             {
 
@@ -190,10 +197,10 @@ namespace DbLayer1
                         if (count < 5)
                         {
                             count = count + 1;
-                            objPollutantList = fetchPollutants(latitude, longitude);
+                            oneStationPollutant = fetchPollutants(oneStation);
 
                         }
-                        return objPollutantList;
+                        return oneStationPollutant;
                     }
                     else
                     {
@@ -201,9 +208,14 @@ namespace DbLayer1
                         count = 0;
 
                         JObject objResult = (JObject)obj["data"];
+
                         JObject obj1 = (JObject)obj["data"]["iaqi"];
                         JArray obj2 = (JArray)obj["data"]["city"]["geo"];
                         JValue obj3 = (JValue)obj["data"]["aqi"];
+                        JObject obj4 = (JObject)obj["data"]["time"];
+                        
+                       
+
                         string aqi = (string)obj3.ToObject(typeof(string));
 
 
@@ -215,7 +227,7 @@ namespace DbLayer1
                         {
                             Dictionary<string, JObject> dictObj = obj1.ToObject<Dictionary<string, JObject>>();
 
-
+                            oneStationPollutant.last_update = (string)obj4["s"];
 
 
                             //  JArray pollutantList = (JArray)obj["data"];
@@ -235,6 +247,8 @@ namespace DbLayer1
                                 objPollutantList.Add(pm);
 
                             }
+
+                            // this code is to add aqi value in pollutants table once with all pollutant list
                             PollutantModel pm1 = new PollutantModel();
                             pm1.PollutantName = "Aqi";
 
@@ -247,7 +261,11 @@ namespace DbLayer1
                                 pm1.PollutantValue = aqi;
                             }
 
+                           
+                           
                             objPollutantList.Add(pm1);
+
+                            oneStationPollutant.pollutantModelList = objPollutantList;
 
                         }
                     }
@@ -261,7 +279,7 @@ namespace DbLayer1
                 string message = ex.ToString();
             }
 
-            return objPollutantList;
+            return oneStationPollutant;
 
 
 
