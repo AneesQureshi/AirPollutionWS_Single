@@ -41,11 +41,11 @@ namespace BusinessLayer1
         }
 
         //fetching station details from Pvt Api
-        public List<StationModel> FetchStation(string city)
+        public List<StationModel> FetchStation(string city, string state, string country)
         {
             List<StationModel> objStationList = new List<StationModel>();
             ApiHelper objAp = new ApiHelper();
-            objStationList = objAp.fetchStation(city);
+            objStationList = objAp.fetchStation(city,state,country);
             return objStationList;
         }
 

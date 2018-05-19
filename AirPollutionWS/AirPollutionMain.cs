@@ -24,12 +24,12 @@ namespace AirPollutionWS
                 List<RecordsModel> objCityList = new List<RecordsModel>();
 
                 //fetching country, state, city name from govt api
-               objRecordsModel =objPlace.FetchPlace();
+                  objRecordsModel =objPlace.FetchPlace();
 
                
 
                 //adding country, state, city name from govt api to database 
-                objPlace.AddPlace(objRecordsModel);
+                    objPlace.AddPlace(objRecordsModel);
 
                 //fetching city details from database(above list may keep changing so we are taking city details from database)
                 objCityList = objPlace.FetchCity();
@@ -41,12 +41,14 @@ namespace AirPollutionWS
                     List<StationModel> objStationList = new List<StationModel>();
                     string cityId = cityRecord.id;
                     string city = cityRecord.city;
+                    string state = cityRecord.state;
+                    string country = cityRecord.country;
 
                     ////for debugger point
                     //string str = "";
                    
                         //on the basis of city we call below function and get the station list with aqi,name & lat long from pvt api
-                        objStationList = objPlace1.FetchStation(city);
+                        objStationList = objPlace1.FetchStation(city,state,country);
 
                     //add station name,aqi, lat long into the database
                       objPlace1.addStation(objStationList, cityId);

@@ -77,11 +77,11 @@ namespace DbLayer1
 
 
         //fetching station detail from pvt api
-        public List<StationModel> fetchStation(string city)
+        public List<StationModel> fetchStation(string city, string state, string country)
 
         {
             string URL1 = "https://api.waqi.info/search/";
-            string urlParameters1 = "?token=9890a36bde6c6f1aa7d923ef95c8b26dca940d49&keyword=" + city + ", India";
+            string urlParameters1 = "?token=9890a36bde6c6f1aa7d923ef95c8b26dca940d49&keyword=" + city + ", " +country;
 
 
             List<StationModel> objStationList = new List<StationModel>();

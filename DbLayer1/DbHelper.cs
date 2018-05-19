@@ -1,10 +1,13 @@
 ﻿using EntityLayer1;
+using GoogleMaps.LocationServices;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,24 +25,32 @@ namespace DbLayer1
         {
             bool allRecordsInserted = false;
 
-
+            string previousStation = "null";
 
             try
             {
 
                 foreach (var records in objRecordsModel)
                 {
-
-
+                    
                     conn = dbc.openConnection();
                     cmd = new MySqlCommand("sp_addPlace", conn);
                     cmd.CommandType = CommandType.StoredProcedure;
+
+                    
                     cmd.Parameters.AddWithValue("val_country", records.country);
                     cmd.Parameters.AddWithValue("val_state", records.state);
                     cmd.Parameters.AddWithValue("val_city", records.city);
 
+
+
+                    cmd.Parameters.AddWithValue("val_previousStation", previousStation);
                     //adding govt station and pollutant data
                     cmd.Parameters.AddWithValue("val_station", records.station);
+                    
+
+                    //cmd.Parameters.AddWithValue("val_lat", latitude);
+                    //cmd.Parameters.AddWithValue("val_long", longitude);
                     cmd.Parameters.AddWithValue("val_pollutantName", records.pollutant_id);
                     cmd.Parameters.AddWithValue("val_pollutantValue", records.pollutant_avg);
 
@@ -50,12 +61,14 @@ namespace DbLayer1
 
                     cmd.Parameters.AddWithValue("val_lastUpdated", dateValue);
 
-                    //if exist place check, fetching id 
+                   
                     int recordInserted = cmd.ExecuteNonQuery();
 
-                    //fetch station id and send that station id with pollutant value and name to proc that added pollutants
+                    previousStation = records.station;
 
                     }
+
+
 
                 allRecordsInserted = true;
 
@@ -96,6 +109,8 @@ namespace DbLayer1
                     RecordsModel objCity = new RecordsModel();
                     objCity.id = sdr["id"].ToString();
                     objCity.city = sdr["city"].ToString();
+                    objCity.state = sdr["state"].ToString();
+                    objCity.country = sdr["country"].ToString();
 
                     objCityList.Add(objCity);
 
