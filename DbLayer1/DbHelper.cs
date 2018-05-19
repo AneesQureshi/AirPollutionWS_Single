@@ -1,5 +1,5 @@
 ﻿using EntityLayer1;
-using GoogleMaps.LocationServices;
+
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -25,7 +25,7 @@ namespace DbLayer1
         {
             bool allRecordsInserted = false;
 
-            string previousStation = "null";
+            string previousStation = "empty";
 
             try
             {
