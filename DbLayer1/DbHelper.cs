@@ -21,6 +21,7 @@ namespace DbLayer1
         DbConnect dbc = new DbConnect();
 
         //adding country, state, city name from govt api to database
+        //and add station and pollutants data also 
         public bool addPlace(List<RecordsModel> objRecordsModel)
         {
             bool allRecordsInserted = false;
@@ -58,10 +59,10 @@ namespace DbLayer1
                     string replace = records.last_update.Replace("-", "/");
                     DateTime dateValue;
                     DateTime.TryParseExact(replace, "d/M/yyyy HH:mm:ss", CultureInfo.InvariantCulture,DateTimeStyles.None, out dateValue);
-
+                    dateValue = dateValue.AddHours(-5.5);
                     cmd.Parameters.AddWithValue("val_lastUpdated", dateValue);
+                    
 
-                   
                     int recordInserted = cmd.ExecuteNonQuery();
 
                     previousStation = records.station;
@@ -185,17 +186,34 @@ namespace DbLayer1
 
             try
             {
+                string time = oneStation.timeZone;
 
+                string s1 = time;
+                string sign = s1.Substring(0, 1);
 
-                double latitude = oneStation.StationLatitude;
-                double longitude = oneStation.StationLongitude;
+                time = time.Trim(new Char[] { '+', '-', });
 
-
+                
+                   
+                TimeSpan timeZone = TimeSpan.Parse(time);
+                
+              
                 string replace = oneStation.last_update.Replace("-", "/");
                 DateTime AqiUpdateDate;
                 DateTime.TryParseExact(replace, "yyyy/M/d HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out AqiUpdateDate);
 
 
+                if (sign == "+")
+                {
+                    AqiUpdateDate = AqiUpdateDate.Add(-timeZone);
+                }
+                else
+                {
+                    AqiUpdateDate = AqiUpdateDate.Add(timeZone);
+
+                }
+                double latitude = oneStation.StationLatitude;
+                double longitude = oneStation.StationLongitude;
 
                 foreach (var pollutant in oneStation.pollutantModelList)
                 {

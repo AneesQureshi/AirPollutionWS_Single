@@ -227,7 +227,12 @@ namespace DbLayer1
                         {
                             Dictionary<string, JObject> dictObj = obj1.ToObject<Dictionary<string, JObject>>();
 
+
+                            
+
                             oneStationPollutant.last_update = (string)obj4["s"];
+                            oneStationPollutant.timeZone= (string)obj4["tz"];
+
 
 
                             //  JArray pollutantList = (JArray)obj["data"];

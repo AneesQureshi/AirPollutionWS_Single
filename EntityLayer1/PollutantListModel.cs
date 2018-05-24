@@ -11,6 +11,7 @@ namespace EntityLayer1
         public double StationLatitude { get; set; }
         public double StationLongitude { get; set; }
         public string last_update { get; set; }
+        public string timeZone { get; set; }
         public List<PollutantModel> pollutantModelList{ get; set; }
     }
 }
