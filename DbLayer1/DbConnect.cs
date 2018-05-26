@@ -15,7 +15,7 @@ namespace DbLayer1
         MySqlConnection conn;
         public DbConnect()
         {
-            string connectionName = ConfigurationManager.ConnectionStrings["ConnectionStringDev"].ConnectionString;
+            string connectionName = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             conn = new MySqlConnection(connectionName);
         }
         public MySqlConnection openConnection()
